@@ -7,24 +7,27 @@ import clsx from 'clsx';
 export type OnClick = () => void;
 
 type ArrowButtonProps = {
-	isOpen: boolean;
-	onClick: OnClick;
+  isOpen: boolean;
+  onClick: OnClick;
+  ariaControlsId?: string;
 };
 
-export const ArrowButton = ({ isOpen, onClick }: ArrowButtonProps) => {
-	return (
-		/* Не забываем указаывать role и aria-label атрибуты для интерактивных элементов */
-		<div
-			role='button'
-			aria-label='Открыть/Закрыть форму параметров статьи'
-			tabIndex={0}
-			className={clsx(styles.container, { [styles.container_open]: isOpen })}
-			onClick={onClick}>
-			<img
-				src={arrow}
-				alt='иконка стрелочки'
-				className={clsx(styles.arrow, { [styles.arrow_open]: isOpen })}
-			/>
-		</div>
-	);
+export const ArrowButton = ({ isOpen, onClick, ariaControlsId }: ArrowButtonProps) => {
+  return (
+    <button
+      type="button"
+      className={clsx(styles.container, { [styles.container_open]: isOpen })}
+      aria-label="Открыть/Закрыть форму параметров статьи"
+      aria-expanded={isOpen}
+      aria-controls={ariaControlsId}
+      onClick={onClick}
+    >
+      <img
+        src={arrow}
+        alt=""
+        className={clsx(styles.arrow, { [styles.arrow_open]: isOpen })}
+        aria-hidden
+      />
+    </button>
+  );
 };
