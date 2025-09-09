@@ -1,10 +1,9 @@
-// src\components\article-params-form\ArticleParamsForm.tsx
-
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Select } from 'src/ui/select';
 import { Text } from 'src/ui/text';
+import { Separator } from 'src/ui/separator';
 
 import {
 	ArticleStateType,
@@ -20,55 +19,31 @@ import {
 import styles from './ArticleParamsForm.module.scss';
 import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
-import { Separator } from 'src/ui/separator';
 import { useCloseForm } from 'src/components/hooks/CloseForm';
 
 type ArticleParamsFormProps = {
 	applySettings: (settings: ArticleStateType) => void;
 };
 
-export const ArticleParamsForm = ({
-	applySettings,
-}: ArticleParamsFormProps) => {
+export const ArticleParamsForm = ({ applySettings }: ArticleParamsFormProps) => {
 	const [formIsOpened, setFormIsOpened] = useState(false);
-	const [formSettings, setFormSettings] =
-		useState<ArticleStateType>(defaultArticleState);
+	const [formSettings, setFormSettings] = useState<ArticleStateType>(defaultArticleState);
 	const refForm = useRef<HTMLFormElement>(null);
 
-	const {
-		backgroundColor,
-		contentWidth,
-		fontColor,
-		fontFamilyOption,
-		fontSizeOption,
-	} = formSettings;
+	const { backgroundColor, contentWidth, fontColor, fontFamilyOption, fontSizeOption } = formSettings;
 
-	const toggleForm = () => {
-		setFormIsOpened((opened) => !opened);
-	};
+	const toggleForm = () => setFormIsOpened((opened) => !opened);
 
 	const updateFormSettings = (newSettings: Partial<ArticleStateType>) => {
 		setFormSettings((prev) => ({ ...prev, ...newSettings }));
 	};
 
-	const handleFontChange = (newValue: OptionType) =>
-		updateFormSettings({ fontFamilyOption: newValue });
-	const handleFontSizeChange = (newValue: OptionType) =>
-		updateFormSettings({ fontSizeOption: newValue });
-	const handleFontColorChange = (newValue: OptionType) =>
-		updateFormSettings({ fontColor: newValue });
-	const handleBGColorChange = (newValue: OptionType) =>
-		updateFormSettings({ backgroundColor: newValue });
-	const handleContentWidthChange = (newValue: OptionType) =>
-		updateFormSettings({ contentWidth: newValue });
-
-	const defaultFontFamilyPlaceholder =
-		fontFamilyOption?.title || fontFamilyOptions[0]?.title;
-	const defaultFontColorPlaceholder = fontColor?.title || fontColors[0]?.title;
-	const defaultBGColorPlaceholder =
-		backgroundColor?.title || backgroundColors[0]?.title;
-	const defaultContentWidthPlaceholder =
-		contentWidth?.title || contentWidthArr[0]?.title;
+	// универсальный обработчик для всех Select
+	const handleOnChange = (field: keyof ArticleStateType) => {
+		return (value: OptionType) => {
+			updateFormSettings({ [field]: value });
+		};
+	};
 
 	const resetFormSettings = () => {
 		setFormSettings(defaultArticleState);
@@ -95,62 +70,59 @@ export const ArticleParamsForm = ({
 			<aside
 				className={clsx(styles.container, {
 					[styles.container_open]: formIsOpened,
-				})}>
+				})}
+			>
 				<form className={styles.form} onSubmit={handleSubmit} ref={refForm}>
-					<Text as='h2' size={31} weight={800} uppercase>
+					<Text as="h2" size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
 
 					<Select
-						title='шрифт'
+						title="Шрифт"
 						selected={fontFamilyOption}
 						options={fontFamilyOptions}
-						placeholder={defaultFontFamilyPlaceholder}
-						onChange={handleFontChange}
+						onChange={handleOnChange('fontFamilyOption')}
 					/>
 
 					<RadioGroup
-						name={'radioGroupName'}
+						name="font-size"
 						options={fontSizeOptions}
 						selected={fontSizeOption}
-						onChange={handleFontSizeChange}
-						title='размер шрифта'
+						onChange={handleOnChange('fontSizeOption')}
+						title="Размер шрифта"
 					/>
 
 					<Select
-						title='цвет шрифта'
-						onChange={handleFontColorChange}
-						placeholder={defaultFontColorPlaceholder}
+						title="Цвет шрифта"
 						selected={fontColor}
 						options={fontColors}
+						onChange={handleOnChange('fontColor')}
 					/>
 
 					<Separator />
 
 					<Select
-						title='цвет фона'
-						onChange={handleBGColorChange}
-						placeholder={defaultBGColorPlaceholder}
+						title="Цвет фона"
 						selected={backgroundColor}
 						options={backgroundColors}
+						onChange={handleOnChange('backgroundColor')}
 					/>
 
 					<Select
-						title='ширина контента'
-						onChange={handleContentWidthChange}
-						placeholder={defaultContentWidthPlaceholder}
+						title="Ширина контента"
 						selected={contentWidth}
 						options={contentWidthArr}
+						onChange={handleOnChange('contentWidth')}
 					/>
 
 					<div className={styles.bottomContainer}>
 						<Button
-							title='Сбросить'
-							htmlType='reset'
-							type='clear'
+							title="Сбросить"
+							htmlType="reset"
+							type="clear"
 							onClick={resetFormSettings}
 						/>
-						<Button title='Применить' htmlType='submit' type='apply' />
+						<Button title="Применить" htmlType="submit" type="apply" />
 					</div>
 				</form>
 			</aside>

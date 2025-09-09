@@ -8,11 +8,7 @@ import { Article } from '../article';
 import styles from 'src/styles/index.module.scss';
 
 export const App = () => {
-	const [settings, setSettings] =
-		useState<ArticleStateType>(defaultArticleState);
-	const handleApplySettings = (newSettings: ArticleStateType) => {
-		setSettings(newSettings);
-	};
+	const [settings, setSettings] = useState<ArticleStateType>(defaultArticleState);
 
 	return (
 		<main
@@ -25,8 +21,9 @@ export const App = () => {
 					'--container-width': settings.contentWidth.value,
 					'--bg-color': settings.backgroundColor.value,
 				} as CSSProperties
-			}>
-			<ArticleParamsForm applySettings={handleApplySettings} />
+			}
+		>
+			<ArticleParamsForm applySettings={setSettings} />
 			<Article />
 		</main>
 	);
